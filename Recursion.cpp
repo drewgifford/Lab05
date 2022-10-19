@@ -10,13 +10,16 @@ using namespace std;
 // 3! = 3 * 2 * 1
 // 4! = 4 * 3 * 2 * 1
 
-
 int FactorialByRecursion::CalculateFactorial(int num) 
 {
 
-	int answer = 1;
+	int answer;
 
-	// TODO
+	if (num == 0){
+		return 1;
+	}
+
+	answer = num * CalculateFactorial(num-1);
 	
 	return answer;
 
@@ -24,46 +27,95 @@ int FactorialByRecursion::CalculateFactorial(int num)
 
 
 int FactorialByStack::CalculateFactorial(int num) {
+	
+	for(int i = num; i > 0; --i){
+		s.push(i);
+	}
 
 	int answer = 1;
 
-	// TODO
+	while (!s.empty()){
+		answer *= s.top();
+		s.pop();
+	}
 
 	return answer;
 }
 
 bool ChessBoard::Solve(ChessBoard chessBoard, int col) {
 
-	if (col >= 8) {
-		return true;
-	}
+	stack<int> rStack;
+    stack<int> cStack;
 
+    int fill = 0,row = 0;
 
-	for (int i = 0; i < 8; ++i) {
+    rStack.push(row);
+    cStack.push(col);
 
-		if (CheckSafeQueens(chessBoard, i, col)) 
-		{
-			m_board[i][col] = 1;
+    m_board[row][col]=1;
+    row++;
+    
+    while (fill < 7)
+    {
+        if(!CheckSafeQueens(chessBoard, row, col))
+        {
+            fill++;
+            rStack.push(row);
+            cStack.push(col);
+            m_board[row][col] = 1;
+            row++;
+            col = 0;
+        }
+        else
+        {
+            col++;
+            if (col > 7)
+            {
+                
+                row = rStack.top();
+                col = cStack.top();
+                rStack.pop();
+                cStack.pop();
+                
+                m_board[row][col] = 0;
+                col++;
+                fill--;
+                
+            }
+        }
+        
 
-			if (Solve(chessBoard, col + 1) == true)
-			{
-				return true;
-			}
-
-			m_board[i][col] = 0;
-
-		}
-	}
-	return false;
+    }
+    return true;
 }
 
 
 bool ChessBoard::CheckSafeQueens(ChessBoard chessBoard, int row, int col) 
 {
+	
+	// Check horizontally aligned queens
+	for (int i = 0; i < 8; i++){
+		if (m_board[i][col] == 1 || m_board[row][i] == 1) return true; // Queen horizontal! Uh Oh!
+	}
 
-    return false;
+	//Check diagonally aligned queens
+	for(int currR = 0; currR < 8; currR++){
+		for (int currC = 0; currC < 8; currC++){
 
-    // TODO
+			int dr = row - currR;
+			int dc = col - currC;
+
+			if (dr == dc || dr == -dc){
+				if(m_board[currR][currC]) return true; // Queen diagonal! Uh Oh!
+			}
+
+
+		}
+
+	}
+	return false;
+
+
 }
 
 
@@ -73,8 +125,15 @@ string ChessBoard::ToString() {
 	for (int i = 0; i < 8; ++i) {
 		for (int j = 0; j < 8; ++j) {
 			int temp = m_board[i][j];
+
 			stringstream ss;
-			ss << temp;
+
+			if (temp == 0){
+				ss << "◻ ";
+			} else {
+				ss << "◼ ";
+			}
+
 			string str = ss.str();
 			answer = answer + str;
 		}
@@ -98,7 +157,21 @@ extern std::string CallSimpleExceptionMethod(int i)
 	MyFakeClass* resourceThatNeedsToBeCleanedup = nullptr;
 
 	resourceThatNeedsToBeCleanedup = new MyFakeClass();
-	SimpleExceptionMethod(i);
+
+	try {
+		SimpleExceptionMethod(i);
+		retVal = "I did not get an Exception";
+		
+	} catch (MyException1){
+		retVal = "I got Exception 1";
+
+	} catch (MyException2){
+		retVal = "I got Exception 2";
+
+	} catch (MyException3){
+		retVal = "I got Exception 3";
+		
+	}
 
 	delete resourceThatNeedsToBeCleanedup;
 
@@ -122,7 +195,7 @@ extern void SimpleExceptionMethod(int i)
 	else if (i == 3)
 	{
         // TODO uncomment line below, as you need to have all three exceptions working here
-		//throw MyException3();
+		throw MyException3();
 	}
 	else
 	{
@@ -144,4 +217,6 @@ char const* MyException1::what() const throw() {
 char const* MyException2::what() const throw() {
 	return "MyException2";
 }
-// TODO make a MyException3::what
+char const* MyException3::what() const throw() {
+	return "MyException3";
+}

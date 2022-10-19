@@ -62,8 +62,13 @@ public:
 	virtual char const* what() const throw();
 };
 
-// TODO make a MyException3
 
+class  MyException3 : MyBaseException
+{
+public:
+	
+	virtual char const* what() const throw();
+};
 
 extern  std::string CallSimpleExceptionMethod(int i);
 extern  void SimpleExceptionMethod(int i);
@@ -104,4 +109,6 @@ private:
     bool CheckSafeQueens(ChessBoard chessBoard, int i, int col);
 	int m_board[8][8]; //zero is free, while 1 is a placed queen
 	// TODO: add your methods here.
+	stack<int> queen_rows;
+	stack<int> queen_cols;
 };

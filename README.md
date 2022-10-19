@@ -18,10 +18,10 @@ You can stop after getting a single valid solution.
 
 ## Task 3 Exceptions
 
-  * Implement CallSimpleException to return a string of the status of the call to make the unit tests pass.
+  * Implement CallSimpleException to return a string of the status of the call to make the unit tests pass.    
   * Additionally using  try\catch blocks catch the exceptions to report the error string correct
-  * Free the memory of the MyFakeClass appropriately.
-  * Add in MyException3
+  * Free the memory of the MyFakeClass appropriately. 
+  * Add in MyException3          
 
 ## Task 4 Modify the code from Lab02 for the Stack and Queue to use Templates
 
